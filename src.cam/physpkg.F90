@@ -2055,7 +2055,7 @@ subroutine tphysbc (ztodt,               &
 
     call physics_update(state, ptend, ztodt, tend)
     !*** LZN PHYS AUDIT 
-    call phys_audit('BF_SLCV', state)
+    call phys_audit('AF_SLCV', state)
     !*** LZN PHYS AUDIT 
 
 

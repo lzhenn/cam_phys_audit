@@ -30,18 +30,18 @@ Also, you could [refer this](https://github.com/Novarizark/tracacode/blob/master
 Currently, the `physpkg.F90` in CAM workflow has been seperated into the following subprocesses for audit. Note that they are not seperated in "elemental" processes presenting in `physpkg.F90`.
 For example, we combined Rayleigh friction, PBL vertical diffusion, and aerosol dry deposition together as `SFVD`.
 
-| Short Name | Long Name                         |
-| ----       | ----                              |
-|DPCV        | deep convection                   |
-|SLCV        | shallow convection                |
-|SFVD        | surf. exc. PBL diff. and dry depo.|
-|MIPH        | stratiform and microphysics       |
-|WTAR        | aerosol wet chemistry             |
-|RADI        | radiation                         |
-|GWDG        | gravity wave drag                 |
-|ENFX        | energy fixer                      |
-|DRAD        | dry adjustment                    |
-|DYCO        | dynamical core                    |
+| Short Name | Long Name                                         |
+| ----       | ----                                              |
+|DPCV        | deep convection                                   |
+|SLCV        | shallow convection                                |
+|SFVD        | surf. exchange e.g. PBL diffusion. and dry depo.  |
+|MIPH        | stratiform and microphysics                       |
+|WTAR        | aerosol wet chemistry                             |
+|RADI        | radiation                                         |
+|GWDG        | gravity wave drag                                 |
+|ENFX        | energy fixer                                      |
+|DRAD        | dry adjustment                                    |
+|DYCO        | dynamical core                                    |
 
 The following variables have been archived before/after each round of individual subprocess execution. 
 

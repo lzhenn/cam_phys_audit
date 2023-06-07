@@ -2102,7 +2102,7 @@ subroutine tphysbc (ztodt,               &
     call t_stopf('carma_timestep_tend')
    
     !*** LZN PHYS AUDIT 
-    call phys_audit('BF_MIPH', state)
+    call phys_audit('BF_CLDP', state)
     !*** LZN PHYS AUDIT 
 
 
@@ -2204,7 +2204,7 @@ subroutine tphysbc (ztodt,               &
     endif
     
     !*** LZN PHYS AUDIT 
-    call phys_audit('AF_MIPH', state)
+    call phys_audit('AF_CLDP', state)
     !*** LZN PHYS AUDIT 
     
     !*** LZN PHYS AUDIT 

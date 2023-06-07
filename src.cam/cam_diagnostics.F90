@@ -400,8 +400,8 @@ subroutine diag_init()
    call  define_audit_fld('BF_SFVD', 'before surf. exc. PBL diff. and dry depo.')
    call  define_audit_fld('AF_SFVD', 'after surf. exc. PBL diff. and dry depo.')
    
-   call  define_audit_fld('BF_MIPH', 'before stratiform and microphysics')
-   call  define_audit_fld('AF_MIPH', 'after stratiform and microphysics')
+   call  define_audit_fld('BF_CLDP', 'before stratiform and microphysics')
+   call  define_audit_fld('AF_CLDP', 'after stratiform and microphysics')
    
    call  define_audit_fld('BF_WTAR', 'before aerosol wet chemistry')
    call  define_audit_fld('AF_WTAR', 'after aerosol wet chemistry')

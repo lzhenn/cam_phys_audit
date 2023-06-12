@@ -1373,6 +1373,12 @@ subroutine tphysac (ztodt,   cam_in,  &
          call physics_state_check(state, name="before tphysac")
 
     call t_startf('tphysac_init')
+    !*** LZN PHYS AUDIT 
+    call phys_audit('BF_SFVD', state)
+    !*** LZN PHYS AUDIT 
+
+
+    
     ! Associate pointers with physics buffer fields
     itim = pbuf_old_tim_idx()
 
@@ -1404,10 +1410,6 @@ subroutine tphysac (ztodt,   cam_in,  &
     ! emission of aerosols at surface
     call aerosol_emis_intr (state, cam_in)
    
-    !*** LZN PHYS AUDIT 
-    call phys_audit('BF_SFVD', state)
-    !*** LZN PHYS AUDIT 
-
 
     if (carma_do_emission) then
        ! carma emissions
@@ -1549,12 +1551,12 @@ subroutine tphysac (ztodt,   cam_in,  &
     ! Gravity wave drag
     !===================================================
     call t_startf('gw_intr')
-
-    call gw_intr(state, sgh, pbuf, ztodt, ptend, cam_in%landfrac)
-
     !*** LZN PHYS AUDIT 
     call phys_audit('BF_GWDG', state)
     !*** LZN PHYS AUDIT 
+
+    call gw_intr(state, sgh, pbuf, ztodt, ptend, cam_in%landfrac)
+
     call physics_update(state, ptend, ztodt, tend)
    
     !*** LZN PHYS AUDIT 
@@ -1970,7 +1972,10 @@ subroutine tphysbc (ztodt,               &
     ! This code block is not a good example of interfacing a parameterization
     !===================================================
     call t_startf('dry_adjustment')
-
+    !*** LZN PHYS AUDIT 
+    call phys_audit('BF_DRAD', state)
+    !*** LZN PHYS AUDIT 
+ 
     ! Copy state info for input to dadadj
     ! This is a kludge, so that dadadj does not have to be correctly reformulated in dry static energy
 
@@ -1984,11 +1989,9 @@ subroutine tphysbc (ztodt,               &
          ptend%s, ptend%q(1,1,1))
     ptend%s(:ncol,:)   = (ptend%s(:ncol,:)   - state%t(:ncol,:)  )/ztodt * cpair
     ptend%q(:ncol,:,1) = (ptend%q(:ncol,:,1) - state%q(:ncol,:,1))/ztodt
-    !*** LZN PHYS AUDIT 
-    call phys_audit('BF_DRAD', state)
-    !*** LZN PHYS AUDIT 
-   
+  
     call physics_update(state, ptend, ztodt, tend)
+    
     !*** LZN PHYS AUDIT 
     call phys_audit('AF_DRAD', state)
     !*** LZN PHYS AUDIT 
@@ -2005,6 +2008,12 @@ subroutine tphysbc (ztodt,               &
     ! are zeroed here for input to the moist convection routine
     !
     call t_startf ('convect_deep_tend')
+    !*** LZN PHYS AUDIT 
+    call phys_audit('BF_DPCV', state)
+    !*** LZN PHYS AUDIT 
+
+
+    
     call convect_deep_tend(  &
          cmfmc,      cmfcme,             &
          dlf,        pflx,    zdu,       &
@@ -2014,11 +2023,7 @@ subroutine tphysbc (ztodt,               &
     call t_stopf('convect_deep_tend')
 
          
-    !*** LZN PHYS AUDIT 
-    call phys_audit('BF_DPCV', state)
-    !*** LZN PHYS AUDIT 
-
-
+    
 
     call physics_update(state, ptend, ztodt, tend)
     
@@ -2043,17 +2048,18 @@ subroutine tphysbc (ztodt,               &
     ! Call Hack (1994) convection scheme to deal with shallow/mid-level convection
     !
     call t_startf ('convect_shallow_tend')
-
-    call convect_shallow_tend (ztodt   , cmfmc,  cmfmc2  ,&
-         dlf        , dlf2   ,  rliq   , rliq2, & 
-         state      , ptend  ,  pbuf)
-    call t_stopf ('convect_shallow_tend')
     !*** LZN PHYS AUDIT 
     call phys_audit('BF_SLCV', state)
     !*** LZN PHYS AUDIT 
 
 
+    call convect_shallow_tend (ztodt   , cmfmc,  cmfmc2  ,&
+         dlf        , dlf2   ,  rliq   , rliq2, & 
+         state      , ptend  ,  pbuf)
+    call t_stopf ('convect_shallow_tend')
+    
     call physics_update(state, ptend, ztodt, tend)
+    
     !*** LZN PHYS AUDIT 
     call phys_audit('AF_SLCV', state)
     !*** LZN PHYS AUDIT 
@@ -2084,6 +2090,11 @@ subroutine tphysbc (ztodt,               &
     ! Currently CARMA cloud microphysics is only supported with the MG microphysics.
     call t_startf('carma_timestep_tend')
 
+    !*** LZN PHYS AUDIT 
+    call phys_audit('BF_CLDP', state)
+    !*** LZN PHYS AUDIT 
+
+
     if (carma_do_cldice .or. carma_do_cldliq) then
        call carma_timestep_tend(state, cam_in, cam_out, ptend, ztodt, pbuf, dlf=dlf, rliq=rliq, &
             prec_str=prec_str, snow_str=snow_str, prec_sed=prec_sed_carma, snow_sed=snow_sed_carma)
@@ -2101,10 +2112,6 @@ subroutine tphysbc (ztodt,               &
 
     call t_stopf('carma_timestep_tend')
    
-    !*** LZN PHYS AUDIT 
-    call phys_audit('BF_CLDP', state)
-    !*** LZN PHYS AUDIT 
-
 
     if( microp_scheme == 'RK' ) then
 
@@ -2207,6 +2214,8 @@ subroutine tphysbc (ztodt,               &
     call phys_audit('AF_CLDP', state)
     !*** LZN PHYS AUDIT 
     
+    
+    
     !*** LZN PHYS AUDIT 
     call phys_audit('BF_WTAR', state)
     !*** LZN PHYS AUDIT 
@@ -2289,7 +2298,10 @@ subroutine tphysbc (ztodt,               &
     ! Radiation computations
     !===================================================
     call t_startf('radiation')
-
+    !*** LZN PHYS AUDIT 
+    call phys_audit('BF_RADI', state)
+    !*** LZN PHYS AUDIT 
+ 
     call radiation_tend(state,ptend, pbuf, &
          cam_out, cam_in, &
          cam_in%landfrac,landm,cam_in%icefrac, cam_in%snowhland, &
@@ -2301,19 +2313,15 @@ subroutine tphysbc (ztodt,               &
        tend%flx_net(i) = net_flx(i)
     end do
     
-    !*** LZN PHYS AUDIT 
-    call phys_audit('BF_RADI', state)
-    !*** LZN PHYS AUDIT 
-    
+   
     call physics_update(state, ptend, ztodt, tend)
-    
-    !*** LZN PHYS AUDIT 
-    call phys_audit('AF_RADI', state)
-    !*** LZN PHYS AUDIT 
-    
     
     call check_energy_chng(state, tend, "radheat", nstep, ztodt, zero, zero, zero, net_flx)
 
+    !*** LZN PHYS AUDIT 
+    call phys_audit('AF_RADI', state)
+    !*** LZN PHYS AUDIT 
+ 
     call t_stopf('radiation')
 
     ! Diagnose the location of the tropopause and its location to the history file(s).
